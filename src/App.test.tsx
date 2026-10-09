@@ -69,11 +69,16 @@ describe('bookkeeping UI', () => {
     click(Array.from(container.querySelectorAll('button')).find(button => button.textContent === '编辑')!);
     const amount = container.querySelector('form input') as HTMLInputElement;
     setValue(amount, '30');
+    const inputs = container.querySelectorAll('form input');
+    setValue(inputs[2] as HTMLInputElement, 'updated');
     act(() => container.querySelector('form')?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true })));
     expect(container.querySelectorAll('.transaction')).toHaveLength(1);
     expect(container.textContent).toContain('-¥30.00');
     expect(container.textContent).not.toContain('old');
-    expect(JSON.parse(localStorage.getItem('personal-bookkeeping-transactions') || '[]')).toHaveLength(1);
+    expect(container.textContent).toContain('updated');
+    const saved = JSON.parse(localStorage.getItem('personal-bookkeeping-transactions') || '[]');
+    expect(saved).toHaveLength(1);
+    expect(saved[0]).toMatchObject({ amount: 30, note: 'updated' });
   });
 
   it('deletes a transaction and updates totals', () => {
