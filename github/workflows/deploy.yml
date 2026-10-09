@@ -1,1 +1,49 @@
-<br/>name: Deploy to GitHub Pages<br/><br/>on:<br/>  push:<br/>    branches: [main]<br/>  workflow_dispatch:<br/><br/>permissions:<br/>  contents: read<br/><br/>jobs:<br/>  build:<br/>    runs-on: ubuntu-latest<br/>    steps:<br/>      - name: Check out repository<br/>        uses: actions/checkout@v4<br/><br/>      - name: Set up Node<br/>        uses: actions/setup-node@v4<br/>        with:<br/>          node-version: 22<br/>          cache: npm<br/><br/>      - name: Install dependencies<br/>        run: npm ci --no-audit --no-fund --legacy-peer-deps<br/><br/>      - name: Build site<br/>        run: npm run build -- --base=/codex/<br/><br/>      - name: Upload site<br/>        uses: actions/upload-pages-artifact@v3<br/>        with:<br/>          path: ./dist<br/><br/>  deploy:<br/>    needs: build<br/>    runs-on: ubuntu-latest<br/>    permissions:<br/>      pages: write<br/>      id-token: write<br/>    environment:<br/>      name: github-pages<br/>      url: ${{ steps.deployment.outputs.page_url }}<br/>    steps:<br/>      - name: Deploy to GitHub Pages<br/>        id: deployment<br/>        uses: actions/deploy-pages@v4<br/>
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund --legacy-peer-deps
+
+      - name: Build site
+        run: npm run build -- --base=/codex/
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+   
