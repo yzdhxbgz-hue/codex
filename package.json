@@ -5,5 +5,8 @@
   "type": "module",
   "scripts": {"dev": "vite", "build": "tsc -b && vite build", "test": "vitest run", "preview": "vite preview"},
   "dependencies": {"@vitejs/plugin-react": "latest", "vite": "latest", "typescript": "latest", "react": "latest", "react-dom": "latest", "vitest": "latest", "jsdom": "latest"},
-  "devDependencies": {}
+ "devDependencies": {
+  "@types/react": "latest",
+  "@types/react-dom": "latest"
 }
+
