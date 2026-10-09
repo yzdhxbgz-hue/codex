@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { loadTransactions, saveTransactions, totals, type Transaction, type TransactionType } from './storage';
 
 const categories = ['餐饮','交通','购物','住房','娱乐','工资','其他'];
-const today = () => new Date().toISOString().slice(0, 10);
+const today = () => { const d = new Date(); const offset = d.getTimezoneOffset(); return new Date(d.getTime() - offset * 60000).toISOString().slice(0, 10); };
 const emptyForm = { amount: '', type: 'expense' as TransactionType, category: '餐饮', date: today(), note: '' };
 
 export default function App() {
